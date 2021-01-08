@@ -1,5 +1,5 @@
 <template>
-  <the-navigation v-if="currentRouteName != 'login' && currentRouteName != 'registration' && currentRouteName != 'forgotpassword' "></the-navigation>
+  <!-- <the-navigation v-if="currentRouteName != 'login' && currentRouteName != 'registration' && currentRouteName != 'forgotpassword' "></the-navigation> -->
   <!-- <div>{{ currentRouteName }}</div> -->
   <main>
     <router-view></router-view>
@@ -7,11 +7,11 @@
 </template>
 
 <script>
-import TheNavigation from './components/nav/TheNavigation.vue';
+// import TheNavigation from './components/nav/TheNavigation.vue';
 
 export default {
   components: {
-    TheNavigation
+    // TheNavigation
   },
   computed: {
     currentRouteName() {

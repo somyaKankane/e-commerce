@@ -15,6 +15,8 @@
 <template>
   <div class="hello">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- <img alt="Vue logo" src="../assets/cardLogo2.png" width="50px"> -->
+      <img alt="Vue logo" src="../../assets/cardLogo2.png" :style="{width:'50px'}">
       <a class="navbar-brand" href="#">Shop</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -32,7 +34,14 @@
           <!-- <li class="nav-item">
               
             </li> -->
-        
+         <li v-if="currentRouteName == 'admin'" class="nav-item ">
+              <router-link class="nav-link" to="/profile">Profile</router-link>
+              
+          </li>
+          
+          <li v-if="currentRouteName == 'admin' " class="nav-item">
+            <router-link class="nav-link" to="/addproduct">Add Product</router-link>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -64,18 +73,22 @@ export default {
     ...mapGetters({
 // map `this.user` to `this.$store.getters.user`
       user: "user"
-    })
+    }),
+    currentRouteName() {
+      return this.$route.name;
+    }
+
   },
-    beforeMount() {
-      // console.log("asdad", localStorage.getItem(uid) );
-      // this.uid = localStorage.uid;
-      // alert(localStorage.uid);
-      if(localStorage.uid == undefined || localStorage.email == undefined ){
-        this.$router.replace({name: "login"});
-      }else{
-        this.$router.replace({name: "home"});
-      }
-    },
+    // beforeMount() {
+    //   // console.log("asdad", localStorage.getItem(uid) );
+    //   // this.uid = localStorage.uid;
+    //   // alert(localStorage.uid);
+    //   if(localStorage.uid == undefined || localStorage.email == undefined ){
+    //     this.$router.replace({name: "login"});
+    //   }else{
+    //     this.$router.replace({name: "home"});
+    //   }
+    // },
 
   methods: {
     signOut() {

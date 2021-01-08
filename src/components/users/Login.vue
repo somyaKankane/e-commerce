@@ -92,7 +92,7 @@ export default {
         localStorage.setItem('uid', data.user.uid);
         localStorage.setItem('email', data.user.email);
 
-        this.$router.replace({ name: "home" });
+        this.$router.replace({ name: "admin" });
       })
       .catch(err => {
         this.error = err.message;

@@ -1,4 +1,5 @@
 <template>
+ <the-navigation></the-navigation>
     <div class="home container">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
@@ -8,11 +9,13 @@
                 </div>
             </div>
         <h1>Home</h1>
+        
     </div>
 </template>
 <script>
 // import HelloWorld from "from './components/HelloWorld.vue";
 import { mapGetters } from "vuex";
+import TheNavigation from '../nav/TheNavigation.vue';
 export default {
     name: "home",
     // components:{
@@ -23,7 +26,10 @@ export default {
     ...mapGetters({
       user: "user"
     })
-  }
+  },
+   components: {
+    TheNavigation
+  },
 }
 </script>
 <style>

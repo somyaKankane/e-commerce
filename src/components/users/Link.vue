@@ -1,4 +1,5 @@
 <template>
+<the-navigation></the-navigation>
     <div class="link container">
         <h1>About us</h1>
         <div class="container">
@@ -28,7 +29,11 @@
 </template>
 
 <script>
-  export default {
+import TheNavigation from '../nav/TheNavigation.vue';
 
+  export default {
+  components: {
+    TheNavigation
+  },
   }
 </script>
