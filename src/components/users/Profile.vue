@@ -20,7 +20,7 @@
 
           <div class="profile-content">
 
-          <!-- <ul class="nav nav-pills ml-3" id="myTab" role="tablist">
+          <ul class="nav nav-pills ml-3" id="myTab" role="tablist">
 
             <li class="nav-item">
               <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
@@ -30,7 +30,7 @@
               <a class="nav-link"  id="account-tab" data-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="false">Account settings</a>
             </li>
            
-          </ul> -->
+          </ul>
 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active pt-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -139,18 +139,15 @@
 <script>
 // import { VueEditor } from "vue2-editor";
 // import { firebase, db} from '../firebase';
-import {firebase,db} from "firebase";
-
+import  firebase from "firebase";
+import { db } from '../../main';
 
 export default {
   name: "profile",
-  components: {
-    // VueEditor
-  },
+
   props: {
     msg: String
   },
-
   data(){
     return {
         profile: {
@@ -159,7 +156,6 @@ export default {
           address:null,
           postcode:null
         },
-
         account:{
             name:null,
             email:null,
@@ -171,10 +167,8 @@ export default {
         }       
     }
   },
-
   firestore(){
-      const user = firebase.auth().currentUser;
-      console.log(db.collection('profiles').doc(user.uid));
+      const user = firebase.auth().currentUser
       return {
         profile: db.collection('profiles').doc(user.uid),
       }
@@ -182,31 +176,23 @@ export default {
   methods:{
       resetPassword(){
           const auth = firebase.auth();          
-
           auth.sendPasswordResetEmail(auth.currentUser.email).then(() =>  {
               //  Toast.fire({
               //   type: 'success',
               //   title: 'Email sent'
               // })
+              alert("success");
           }).catch((error) =>  {
               console.log(error);
           });
       },
-
       updateProfile(){
-        alert("dsfsdf");
-        console.log(this.profile);
           this.$firestore.profile.update(this.profile);
       },
       uploadImage(){}
   },
   created(){
   }
-
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>

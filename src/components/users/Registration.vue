@@ -74,6 +74,7 @@
 // import { successToaster, errorToaster } from "./shared/service/ErrorHandler.js";
 
 import firebase from "firebase";
+import { db } from '../../main';
 export default {
   name: "CreateAccount",
   data() {
@@ -131,8 +132,17 @@ export default {
               displayName: this.user.firstName +  this.user.lastName
             })
             .then(() => {
+               console.log(data.user.uid);
+                 db.collection('profiles').add(this.user)
+                    .then(function() {
+                        console.log("Document successfully written!");
+                    })
+                    .catch(function(error) {
+                        console.error("Error writing document: ", error);
+                    });
               this.$router.replace({ name: "login" });
             });
+           
         })
         .catch(err => {
           this.error = err.message;

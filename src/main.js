@@ -19,6 +19,9 @@ import Product from './components/users/Products.vue';
 import Overview from './components/users/Overview.vue';
 import Profile from './components/users/Profile.vue';
 import Orders from './components/users/Orders.vue';
+import Checkout from './components/users/Checkout.vue';
+
+
 
 require("firebase/firestore");
 
@@ -27,17 +30,18 @@ require("firebase/firestore");
 
 
 const configOptions = {
-  apiKey: "AIzaSyBbSHqC8EfjwgM4fXIMvtJVB86svfL1jmI",
-  authDomain: "ecommerce-a884c.firebaseapp.com",
-  databaseURL: "https://ecommerce-a884c-default-rtdb.firebaseio.com/",
-  projectId: "ecommerce-a884c",
-  storageBucket: "ecommerce-a884c.appspot.com",
-  messagingSenderId: "780012902324",
-  appId: "1:780012902324:web:03c2cc2b0aa681ee1f04e1",
-  measurementId: "G-P6WDYG92LB"
+  apiKey: "AIzaSyBcE3iZ0u_Gb9tHPsdmnXoP66-cO0xtiGE",
+    authDomain: "p1ecommerce.firebaseapp.com",
+    databaseURL: "https://p1ecommerce-default-rtdb.firebaseio.com",
+    projectId: "p1ecommerce",
+    storageBucket: "p1ecommerce.appspot.com",
+    messagingSenderId: "24354891865",
+    appId: "1:24354891865:web:b32efafed20b38f463a948"
 };
 
-firebase.initializeApp(configOptions);
+// firebase.initializeApp(configOptions);
+const firebaseApp = firebase.initializeApp(configOptions);
+export const db = firebaseApp.firestore();
 
 
 const router = createRouter({
@@ -77,7 +81,8 @@ const router = createRouter({
     { path: '/login',name:'login', component: Login },
     { path: '/registration',name:'registration', component: Registration },
     { path: '/forgotpassword',name:'forgotpassword', component: ForgotPassword },
-    { path: '/home',name:'home', component: Home}, 
+    { path: '/home',name:'home', component: Home},
+    { path: '/checkout',name:'checkout', component: Checkout}, 
     
     {path: '/:notFound(.*)', redirect: '/login'}
   ],
@@ -121,3 +126,4 @@ app.component('VueFontawesome', require('vue-fontawesome-icon/VueFontawesome.vue
  
 
 app.mount('#app');
+// export const db = firebase.firestore();

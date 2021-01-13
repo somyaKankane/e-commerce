@@ -48,8 +48,52 @@
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         <div class="nav-item">
-          <a class="nav-link pointing" :style="{color:'#28a745'}" @click.prevent="signOut">Sign out</a>
+          <!-- <a class="nav-link pointing" :style="{color:'#28a745'}" @click.prevent="signOut">Sign out</a> -->
+          <!-- <i class="fa fa-line-chart"></i> -->
+          <!-- <vue-fontawesome icon="shopping-bag" class="nav-link pointing" size="2" color="#28a745"></vue-fontawesome> -->
         </div>
+          <div class="add-to-cart">
+   
+           <vue-fontawesome @click="addToCart" icon="shopping-bag" class="nav-link pointing" size="2" color="#28a745"></vue-fontawesome>      
+          </div>
+
+           <div class="mini-cart">
+   
+        <!-- Modal -->
+        <div class="modal fade" id="miniCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">My Bag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <ul>
+                    <li class="media">
+                      <!-- <img :src="item.productImage" width="80px" class="align-self-center mr-3" alt=""> -->
+                      <div class="media-body">
+                        <h5 class="mt-0">abc
+                          <span class='float-right' @click="$store.commit('removeFromCart',item)">X</span>
+                        </h5>
+                        <p class="mt-0">65$</p>
+                        <p class="mt-0">Quantity : 5</p>
+                      </div>
+                    </li>
+
+                  </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
+                <button type="button" class="btn btn-primary" @click="checkout">Checkout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    
+  </div>
       </div>
     </nav>
 
@@ -62,18 +106,33 @@
 <script>
 import firebase from "firebase";
 import { mapGetters } from "vuex";
-
+import $ from 'jquery';
 export default {
   name: 'NavBar',
   uid:'',
   props: {
-    msg: String
+    msg: String,
+     name: String,
+    price: String,
+    image: String,
+    pId: String
   },
    computed: {
     ...mapGetters({
 // map `this.user` to `this.$store.getters.user`
       user: "user"
     }),
+     data(){
+      return {
+          item :{
+            productName: this.name,
+            productImage: this.image,
+            productPrice: this.price,
+            productId: this.pId,
+            productQuantity: 1,
+          }
+      }
+  },
     currentRouteName() {
       return this.$route.name;
     }
@@ -102,9 +161,18 @@ export default {
           });
         });
     },
+     addToCart(){
+      $('#miniCart').modal('show');
+      this.$store.commit('addToCart', this.item)
+    },
+    checkout(){
+      $('#miniCart').modal('hide')
+      this.$router.push('/checkout')  
+    }
     // beforeMount(){
     //  console.log("asdad", localStorage.getItem(uid) );
     // },
+    
   }
 }
 </script>
