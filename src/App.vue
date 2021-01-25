@@ -2,7 +2,10 @@
   <!-- <the-navigation v-if="currentRouteName != 'login' && currentRouteName != 'registration' && currentRouteName != 'forgotpassword' "></the-navigation> -->
   <!-- <div>{{ currentRouteName }}</div> -->
   <main>
+    <!-- <router-view></router-view> -->
+    <keep-alive>
     <router-view></router-view>
+</keep-alive>
   </main>
 </template>
 
@@ -26,7 +29,13 @@ export default {
   provide() {
     return {
     };
-  }
+  },
+  mounted() {
+     
+
+
+  },
+
 
 };
 </script>

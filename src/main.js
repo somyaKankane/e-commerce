@@ -7,8 +7,8 @@ import App from './App.vue';
 
 import Home from './components/users/Home.vue';
 import Link from './components/users/Link.vue';
-import Login from './components/users/Login.vue';
-import Registration from './components/users/Registration.vue';
+import Login from '../src/views/Login.vue';
+import Registration from '../src/views/Registration.vue';
 import Admin from './components/users/Admin.vue';
 import './assets/app.css';
 import  firebase from "firebase";
@@ -20,8 +20,10 @@ import Overview from './components/users/Overview.vue';
 import Profile from './components/users/Profile.vue';
 import Orders from './components/users/Orders.vue';
 import Checkout from './components/users/Checkout.vue';
+import ProductDetail from './components/product/ProductDetail.vue';
 
 
+import Vuex from 'vuex';
 
 require("firebase/firestore");
 
@@ -47,8 +49,9 @@ export const db = firebaseApp.firestore();
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {path: '/', redirect: '/login'},
-    { path: '/admin',name:'admin', component: Admin, meta: { requiresAuth: true },children:[
+    {path: '/', redirect: '/home'},
+    { path: '/admin',name:'admin', component: Admin, meta: { requiresAuth: true },
+    children:[
       {
         path: '/',
         name:'products',
@@ -77,13 +80,28 @@ const router = createRouter({
       },
     ]  },
 
+    
     { path: '/about',name:'about', component: Link }, // our-domain.com/home => Home
     { path: '/login',name:'login', component: Login },
     { path: '/registration',name:'registration', component: Registration },
     { path: '/forgotpassword',name:'forgotpassword', component: ForgotPassword },
     { path: '/home',name:'home', component: Home},
     { path: '/checkout',name:'checkout', component: Checkout}, 
-    
+    {
+      path: '/productDetails/:id',
+      name: 'productDetails',
+      component: ProductDetail
+    },
+    {
+      path: "/userprofile",
+      name: "userprofile",
+      component: Profile
+    },
+    {
+      path: "/myorder",
+      name: "myorder",
+      component: Orders
+    },
     {path: '/:notFound(.*)', redirect: '/login'}
   ],
   linkActiveClass: 'active',
@@ -94,6 +112,7 @@ const router = createRouter({
     return { left:0, top:0}
   }
 });
+window.Vuex = Vuex;
 // router.beforeEach((to, from, next) => {
 
 //   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
@@ -123,7 +142,7 @@ const app = createApp(App);
 app.use(router);
 app.use(store);
 app.component('VueFontawesome', require('vue-fontawesome-icon/VueFontawesome.vue').default);
- 
+app.use(Vuex);
 
 app.mount('#app');
 // export const db = firebase.firestore();

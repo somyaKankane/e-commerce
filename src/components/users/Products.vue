@@ -23,7 +23,10 @@
 
 
             <h3 class="d-inline-block">Products list</h3>
+              
+              	
             <button @click="addNew" class="btn btn-primary float-right">Add Product</button>
+            <button @click="addNewCatogery" class="btn btn-primary float-right mr-1">Add category</button>
 
             <div class="table-responsive">
               
@@ -93,7 +96,7 @@
 
                     <div class="form-group">
                       <!-- <vue-editor v-model="product.description"></vue-editor> -->
-                      <textarea class="form-control" v-model="product.description" placeholder="add description"></textarea>
+                      <textarea class="form-control" rows="7" v-model="product.description" placeholder="add description"></textarea>
                     </div>
                   </div>
                   <!-- product sidebar -->
@@ -106,14 +109,19 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="text" @keyup="addTag" placeholder="Product tags" v-model="tag" class="form-control">
+                      <!-- <input type="text" @keyup="addTag" placeholder="Product tags" v-model="tag" class="form-control"> -->
                       
-                      <div  class="d-flex">
-                        <p v-for="tag in product.tags" :key="tag">
+                      <!-- <div  class="d-flex"> -->
+                        <!-- <p v-for="tag in product.tags" :key="tag">
                             <span class="p-1">{{tag}}</span>
-                        </p>
+                        </p> -->
+                        <label for="product_Category">Product Category</label>
+                        <select v-model="product.tags" class="form-control">
+                            <option disabled value="">Please select one</option>
+                            <option v-for="item in this.$store.state.allCategory" :key="item" :value="item.name">{{item.name}}</option>
+                        </select>
 
-                      </div>
+                      <!-- </div> -->
                     </div>
 
 
@@ -149,6 +157,64 @@
       </div>
 
 
+      <!-- modal catogory -->
+
+      <div class="modal fade" id="category" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editLabel">Edit Category</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                  <!-- main product -->
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" placeholder="Category Name" v-model="category.name" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                      <!-- <vue-editor v-model="product.description"></vue-editor> -->
+                      <textarea class="form-control" rows="7" v-model="category.description" placeholder="Add description"></textarea>
+                    </div>
+                  </div>
+                  <!-- product sidebar -->
+                  <div class="col-md-4">
+                    <h4 class="display-6">Other Category</h4>
+                    <hr>
+
+                    <div   class="form-group">
+                      <ul>
+                        <li v-for="item in this.$store.state.allCategory" :key="item" >
+                         {{item.name}}
+                        </li>
+                    </ul>
+                      <!-- <input type="text" placeholder="Product price" v-model="category.price" class="form-control"> -->
+                     
+                    </div>
+
+
+                  </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button @click="addnewCategory()" type="button" class="btn btn-primary" v-if="modal == 'newCategory'">Save changes</button>
+              <!-- <button @click="updateProduct()" type="button" class="btn btn-primary" v-if="modal == 'edit'">Apply changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     
   </div>
 </template>
@@ -177,6 +243,12 @@ export default {
           price:null,
           tags:[],
           images:[]
+        },
+         category: {
+          name:null,
+          description:null,
+          
+        
         },
         activeItem:null,
         modal: null,
@@ -247,6 +319,10 @@ export default {
         this.modal = 'new';
         this.reset();
         $('#product').modal('show');
+    },
+    addNewCatogery(){
+      this.modal = 'newCategory';
+      $('#category').modal('show');
     },
     updateProduct(){
       
@@ -337,11 +413,20 @@ export default {
           
       $('#product').modal('hide');
     },
+    addnewCategory(){
+      db.collection('productsCategory').add(this.category).then(() => {
+      }).catch((error) => {
+          console.log(error);
+      })
+       $('#category').modal('hide');
+    },
+     
      
   
   },
   mounted() {
     this.readData();
+     this.$store.commit('readCategoryData')
   },
   // beforeMount(){
    

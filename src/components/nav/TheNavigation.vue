@@ -1,17 +1,4 @@
-<!-- <template>
-  <header>
-    <nav>
-      <ul>
-        <li>
-          <router-link to="/teams">Teams</router-link>
-        </li>
-        <li>
-          <router-link to="/users">Users</router-link>
-        </li>
-      </ul>
-    </nav>
-  </header>
-</template>-->
+
 <template>
   <div class="hello">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -52,48 +39,49 @@
           <!-- <i class="fa fa-line-chart"></i> -->
           <!-- <vue-fontawesome icon="shopping-bag" class="nav-link pointing" size="2" color="#28a745"></vue-fontawesome> -->
         </div>
-          <div class="add-to-cart">
+         <div   class="add-to-cart pointing">
+            
    
-           <vue-fontawesome @click="addToCart" icon="shopping-bag" class="nav-link pointing" size="2" color="#28a745"></vue-fontawesome>      
-          </div>
-
-           <div class="mini-cart">
-   
-        <!-- Modal -->
-        <div class="modal fade" id="miniCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">My Bag</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <ul>
-                    <li class="media">
-                      <!-- <img :src="item.productImage" width="80px" class="align-self-center mr-3" alt=""> -->
-                      <div class="media-body">
-                        <h5 class="mt-0">abc
-                          <span class='float-right' @click="$store.commit('removeFromCart',item)">X</span>
-                        </h5>
-                        <p class="mt-0">65$</p>
-                        <p class="mt-0">Quantity : 5</p>
-                      </div>
-                    </li>
-
-                  </ul>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
-                <button type="button" class="btn btn-primary" @click="checkout">Checkout</button>
-              </div>
+           <div class="dropdown">
+            <!-- <button class="add-to-cart pointing" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+            <vue-fontawesome  icon="user"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link  btn btn-small  btn-popup" size="1.5" color="#28a745"></vue-fontawesome>
+            <!-- </button> -->
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <!-- <router-link class="dropdown-item"  to="/profile">  -->
+               <a class="dropdown-item" @click="profilePagr()">
+              <i class="fa fa-user"></i>
+                &nbsp;<span>Profile</span>  
+              </a>
+              <a class="dropdown-item" @click="order()">
+                <i class="fa fa-shopping-basket"></i>
+                &nbsp;<span>Orders</span>
+              </a>
+              <a class="dropdown-item" @click="logout()">
+                <i class="fa fa-power-off"></i>
+                &nbsp;<span>Logout</span>
+              </a>
+              <!-- <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a> -->
             </div>
           </div>
-        </div>
+               
+              
+         
+          
+          </div>
 
-    
-  </div>
+          <div v-if="currentRouteName != 'checkout'" @click="addToCart" class="add-to-cart pointing">
+            
+   
+           <vue-fontawesome  icon="shopping-bag" class="nav-link  btn btn-small  btn-popup" size="1.5" color="#28a745"></vue-fontawesome>      
+          <span class="btn-circle" >
+           {{ getProductsInCart.length }}
+        </span>
+          
+          </div>
+
+          
+          
       </div>
     </nav>
 
@@ -107,6 +95,7 @@
 import firebase from "firebase";
 import { mapGetters } from "vuex";
 import $ from 'jquery';
+import { db } from '../../main';
 export default {
   name: 'NavBar',
   uid:'',
@@ -118,37 +107,23 @@ export default {
     pId: String
   },
    computed: {
-    ...mapGetters({
-// map `this.user` to `this.$store.getters.user`
-      user: "user"
-    }),
+    ...mapGetters([
+      'getProductsInCart',
+    ]),
      data(){
       return {
-          item :{
-            productName: this.name,
-            productImage: this.image,
-            productPrice: this.price,
-            productId: this.pId,
-            productQuantity: 1,
-          }
+          item : [],
+          products: [],
       }
   },
     currentRouteName() {
       return this.$route.name;
     }
+    
 
   },
-    // beforeMount() {
-    //   // console.log("asdad", localStorage.getItem(uid) );
-    //   // this.uid = localStorage.uid;
-    //   // alert(localStorage.uid);
-    //   if(localStorage.uid == undefined || localStorage.email == undefined ){
-    //     this.$router.replace({name: "login"});
-    //   }else{
-    //     this.$router.replace({name: "home"});
-    //   }
-    // },
 
+  
   methods: {
     signOut() {
       firebase
@@ -162,23 +137,98 @@ export default {
         });
     },
      addToCart(){
-      $('#miniCart').modal('show');
-      this.$store.commit('addToCart', this.item)
+      // this.$store.commit('saveCardDataToFirebase');
+         this.checkout();
+      
+     
+
     },
     checkout(){
-      $('#miniCart').modal('hide')
-      this.$router.push('/checkout')  
-    }
-    // beforeMount(){
-    //  console.log("asdad", localStorage.getItem(uid) );
-    // },
+       this.$router.push({name:'checkout',params: { id: localStorage.getItem("cart") }})  ;
+    },
+
+ 
+    catchData(){
+      // alert("safs");
+    var currentUser = localStorage.getItem('uid');
+      this.products = [];
+      db.collection("cardOrder").where("uidDetails", "==", currentUser)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.products.push({
+             
+              name: doc.data().productDetais.name,
+              description:doc.data().productDetais.description,
+              price:doc.data().productDetais.price,
+              tags:doc.data().productDetais.tags,
+              images:doc.data().productDetais.images
+              // date: doc.data().date,
+            });
+            
+          });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+          console.log("dfsd",this.products);
+           window.localStorage.setItem('cart', JSON.stringify(this.products));
+        $('#miniCart').modal('show')
+
     
-  }
+  },
+  profilePagr(){
+    this.$router.replace({name: "userprofile"});
+  },
+  order(){
+    this.$router.replace({name: "myorder"});
+  },
+   logout(){
+         firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          localStorage.clear();
+          this.$router.replace({
+            name: "login"
+          });
+        });
+      },
+   hasProduct() {
+      return this.getProductsInCart.length > 0;
+    },
+
+    
+  },
+  mounted() {
+    // console.log( JSON.parse(localStorage.getItem('cart')) );
+    // // this.catchData();
+    // var data=JSON.parse(localStorage.getItem('cart') );
+    //   data.forEach((value) => {
+    //   this.$store.commit('productAlreadyExist', value)
+    // });
+    // this.$store.commit('productAddToCard', product)
+  },
+
+  
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.btn-circle {
+   width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: red;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 </style>
 

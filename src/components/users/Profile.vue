@@ -1,5 +1,7 @@
 <template>
-  <div class="products">
+<the-navigation v-if="currentRouteName == 'userprofile'"></the-navigation>
+  <div class="products1">
+    
       <div class="container">
           
         <div class="intro h-100">
@@ -16,7 +18,7 @@
               </div>
             </div>
           </div>
-
+<!-- {{profile}} -->
 
           <div class="profile-content">
 
@@ -35,32 +37,45 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active pt-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
-                  <div class="container">
+                  <div >
                       <div class="row">
                         
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" name="" v-model="profile.name" placeholder="Full name" class="form-control">
+                            <input type="text" name="" v-model="profile.firstName" placeholder="First name" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text" name="" v-model="profile.lastName" placeholder="Last name" class="form-control">
                           </div>
                         </div>
 
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <input type="text"  v-model="profile.phone" placeholder="Phone" class="form-control">
-                          </div>
-                        </div>
+
 
                         <div class="col-md-12">
                           <div class="form-group">
                             <input type="text"  v-model="profile.address" placeholder="Address" class="form-control">
                           </div>
                         </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text"  v-model="profile.phone" placeholder="Phone" class="form-control">
+                          </div>
+                        </div>
 
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                           <div class="form-group">
                             <input type="text"  v-model="profile.postCode" placeholder="Postcode" class="form-control">
                           </div>
                         </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text"  v-model="profile.email" placeholder="Email address" class="form-control">
+                          </div>
+                        </div>
+
 
                         <div class="col-md-4">
                           <div class="form-group">
@@ -74,7 +89,7 @@
                 </div>
 
                 <div class="tab-pane fade pt-3" id="account" role="tabpanel" aria-labelledby="account-tab">
-                  <div class="container">
+                  <div >
                       <div class="row">
                         <div class="col-md-">
                             <div class="alert alert-info">
@@ -83,33 +98,33 @@
                         </div>
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"  v-model="account.name" placeholder="User name" class="form-control">
+                            <input type="text" readonly v-model="account.name" placeholder="User name" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"  v-model="account.email" placeholder="Email address" class="form-control">
+                            <input type="text" readonly  v-model="account.email" placeholder="Email address" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text"  v-model="account.password" placeholder="New password" class="form-control">
+                            <input type="password"  v-model="account.password" placeholder="New password" class="form-control">
                           </div>
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <input type="text" v-model="account.confirmPassword"  placeholder="Confirm password" class="form-control">
+                            <input type="password" v-model="account.confirmPassword"  placeholder="Confirm password" class="form-control">
                           </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                           <div class="form-group">
                               <input type="file" @change="uploadImage" class="form-control">
                            </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-4">
                           <div class="form-group">
@@ -119,7 +134,7 @@
 
                         <div class="col-md-4">
                           <div class="form-group">
-                              <input type="button" @click="resetPassword" value="Reset password email" class="btn btn-success w-100">
+                              <input type="button" @click="resetPassword" value="Reset password " class="btn btn-success w-100">
                           </div>
                         </div>
                       </div>
@@ -141,6 +156,7 @@
 // import { firebase, db} from '../firebase';
 import  firebase from "firebase";
 import { db } from '../../main';
+import TheNavigation from '../nav/TheNavigation.vue';
 
 export default {
   name: "profile",
@@ -151,10 +167,7 @@ export default {
   data(){
     return {
         profile: {
-          name:null,
-          phone:null,
-          address:null,
-          postcode:null
+          
         },
         account:{
             name:null,
@@ -164,35 +177,84 @@ export default {
             password:null,
             confirmPassword:null,
             uid:null
-        }       
+        }     ,  
     }
   },
+   components: { TheNavigation },
   firestore(){
-      const user = firebase.auth().currentUser
+      const user = firebase.auth().currentUser;
       return {
         profile: db.collection('profiles').doc(user.uid),
       }
   },
+  computed: {
+    currentRouteName() {
+        return this.$route.name;
+    }
+},
   methods:{
       resetPassword(){
-          const auth = firebase.auth();          
-          auth.sendPasswordResetEmail(auth.currentUser.email).then(() =>  {
-              //  Toast.fire({
-              //   type: 'success',
-              //   title: 'Email sent'
-              // })
-              alert("success");
+          const auth = firebase.auth();   
+          console.log(auth.currentUser.email);       
+          var user = firebase.auth().currentUser;
+// var newPassword = getASecureRandomPassword();
+
+user.updatePassword(this.account.password).then((data)=> {
+  // Update successful.
+  console.log("data",data)
+   alert("password updated successfully");
+}).catch(function(error) {
+  // An error happened.
+  alert(error.message)
+  console.log(error.message);
+});
+          // auth.sendPasswordResetEmail(auth.currentUser.email).then((data) =>  {
+          //     //  Toast.fire({
+          //     //   type: 'success',
+          //     //   title: 'Email sent'
+          //     // })
+          //     console.log(data)
+          //     alert("success");
+          // }).catch((error) =>  {
+          //     console.log(error);
+          // });
+      },
+      dataResponse(){
+        this.$store.commit('userProfile');
+      },
+      updateProfile(){
+          // this.$firestore.profile.update(this.profile);
+          // console.log(this.profile)
+           db.collection('profiles').doc(this.profile.id).update(this.profile).then(() =>  {
+              alert("update success");
           }).catch((error) =>  {
               console.log(error);
           });
       },
-      updateProfile(){
-          this.$firestore.profile.update(this.profile);
-      },
       uploadImage(){}
   },
+  
   created(){
+    // this.firestore();
+    //  this.profile= db.collection('profiles').doc(localStorage.getItem('uid')),
+    // console.log(this.profile);
+    // this.$store.commit('userProfile');
+    // this.profile=this.$store.state.profile;
+    // console.log("sdfsd",this.profile);
+   this.dataResponse();
+    setTimeout(() => {
+       this.profile=this.$store.state.profile;
+       this.account=this.$store.state.account;
+    }, 2000); 
+    
   }
 };
 </script>
 
+<style>
+ .products1{
+        margin: 2rem;
+         background: #f2f2f2;
+  }
+  
+</style>
