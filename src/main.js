@@ -21,7 +21,8 @@ import Profile from './components/users/Profile.vue';
 import Orders from './components/users/Orders.vue';
 import Checkout from './components/users/Checkout.vue';
 import ProductDetail from './components/product/ProductDetail.vue';
-
+import VueSweetalert2 from 'vue-sweetalert2';  
+import Wishlist from '../src/views/Wishlist.vue';
 
 import Vuex from 'vuex';
 
@@ -102,6 +103,11 @@ const router = createRouter({
       name: "myorder",
       component: Orders
     },
+    {
+      path: "/wishlist",
+      name: "wishlist",
+      component: Wishlist
+    },
     {path: '/:notFound(.*)', redirect: '/login'}
   ],
   linkActiveClass: 'active',
@@ -143,6 +149,7 @@ app.use(router);
 app.use(store);
 app.component('VueFontawesome', require('vue-fontawesome-icon/VueFontawesome.vue').default);
 app.use(Vuex);
+app.use(VueSweetalert2); 
 
 app.mount('#app');
 // export const db = firebase.firestore();

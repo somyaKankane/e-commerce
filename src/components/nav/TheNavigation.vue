@@ -56,6 +56,10 @@
                 <i class="fa fa-shopping-basket"></i>
                 &nbsp;<span>Orders</span>
               </a>
+              <a class="dropdown-item" @click="wishlist()">
+                <i class="fa fa-heart" ></i>
+                &nbsp;<span>Wishlist</span>
+              </a>
               <a class="dropdown-item" @click="logout()">
                 <i class="fa fa-power-off"></i>
                 &nbsp;<span>Logout</span>
@@ -149,7 +153,6 @@ export default {
 
  
     catchData(){
-      // alert("safs");
     var currentUser = localStorage.getItem('uid');
       this.products = [];
       db.collection("cardOrder").where("uidDetails", "==", currentUser)
@@ -182,6 +185,9 @@ export default {
   },
   order(){
     this.$router.replace({name: "myorder"});
+  },
+  wishlist(){
+    this.$router.replace({name: "wishlist"});
   },
    logout(){
          firebase

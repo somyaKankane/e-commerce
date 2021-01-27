@@ -202,7 +202,13 @@ export default {
 user.updatePassword(this.account.password).then((data)=> {
   // Update successful.
   console.log("data",data)
-   alert("password updated successfully");
+  //  alert("password updated successfully");
+    this.$swal({  
+                type: 'success',  
+                icon: 'success',
+                title: 'Success',  
+                text: 'Password Updated Successfully'  
+            });  
 }).catch(function(error) {
   // An error happened.
   alert(error.message)
@@ -226,7 +232,13 @@ user.updatePassword(this.account.password).then((data)=> {
           // this.$firestore.profile.update(this.profile);
           // console.log(this.profile)
            db.collection('profiles').doc(this.profile.id).update(this.profile).then(() =>  {
-              alert("update success");
+              // alert("update success");
+               this.$swal({  
+                type: 'success',  
+                icon: 'success',
+                title: 'Success',  
+                text: 'Profile Updated Successfully'  
+            });  
           }).catch((error) =>  {
               console.log(error);
           });

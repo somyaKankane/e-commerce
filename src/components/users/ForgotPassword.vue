@@ -50,10 +50,22 @@ export default {
         .auth()
         .sendPasswordResetEmail(this.email)
         .then(() => {
-            alert('Check your registered email to reset the password!')
-            this.user = {   
-              email: ''
-            }
+            // alert('Check your registered email to reset the password!')
+            this.$swal({  
+                  title: "Info",  
+                  text: "Check your registered email to reset the password!",  
+                  type: "warning",  
+                  icon: 'info',
+                  // showCancelButton: true,  
+                  // confirmButtonColor: "#4026e3",  
+                  // confirmButtonText: "Yes, remove it it!"  
+                  }).then(() => { // <--  
+                    this.user = {   
+                      email: ''
+                    }
+                     this.$router.push('/login')  ;
+                  });  
+           
         }).catch((error) => {
           // alert(error)
            this.error = error.message;

@@ -353,7 +353,13 @@ export default {
           console.log(this.proactive);
           localStorage.removeItem('cart');
           this.$router.push('/home')  ;
-              alert("order placed");
+              // alert("order placed");
+             this.$swal({  
+                type: 'success',  
+                icon: 'success',
+                title: 'Order',  
+                text: 'Your Order Placed Successfully'  
+            });  
         }
      
     },
@@ -385,7 +391,15 @@ export default {
        this.$store.state.orderTotal = this.$store.state.orderTotal + Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
 
         // daata.price = ( Number(daata.price) + Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price ));
-      }else{alert("quantity can't be smaller than 1")}
+      }else{
+      //  this.$swal("quantity can't be smaller than 1");  
+       this.$swal({  
+                type: 'info',  
+                icon: 'warning',
+                title: 'Info',  
+                text: "Quantity Can't Be Smaller Than 1"  
+            });  
+        }
      
     },
     decrease(daata){
@@ -396,7 +410,15 @@ export default {
         this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
         this.$store.state.orderTotal = this.$store.state.orderTotal - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
         // daata.price = ( Number(daata.price) - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price ));
-      }else{alert("quantity can't be smaller than 1")}
+      }else{
+        // this.$swal("quantity can't be smaller than 1");  
+         this.$swal({  
+                type: 'info',  
+                icon: 'warning',
+                title: 'Warning',  
+                text: "Quantity Can't Be Smaller Than 1"  
+            });  
+        }
     },
     remove(item){
       console.log(JSON.parse(localStorage.getItem('cart')).find(data => data.id === item.id) );

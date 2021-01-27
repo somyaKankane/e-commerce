@@ -22,6 +22,7 @@ const store = createStore({
     allCategory:[],
     singleProduct:[],
     allOrder:[],
+    wishlist:[],
   
     cart: cart ? JSON.parse(cart) : [],
     profile: {
@@ -50,6 +51,7 @@ const store = createStore({
     }, 
     // totalPrice: state => {
       getProductsInCart: state => state.cardData,
+      getProductsInCartlength: state => state.cardData.length,
 
 
      
@@ -160,7 +162,7 @@ const store = createStore({
       if(found){
         found.quantity++;
         this.commit('totalPrice');
-        alert("added succesfully")   ;
+        // alert("added succesfully")   ;
         
         // state.totalCalculatePrice=total;
         // state.Shipping=500;
@@ -172,7 +174,7 @@ const store = createStore({
         state.cardData.push(product);
         // set(product, 'quantity' , 1)
        
-        alert("added succesfully")   ;
+        // alert("added succesfully")   ;
       }
 
       this.commit('saveData');
@@ -325,6 +327,25 @@ const store = createStore({
         }).catch(function(error) {
             console.log("Error getting document:", error);
         });
+      },
+
+      Wishlist(state){
+        // console.log(data2);
+        state.wishlist=[];
+        db.collection('wishlist').where('uid','==',localStorage.getItem('uid')).get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            
+
+            state.wishlist.push(doc.data().productDetais);
+              console.log(state.wishlist);
+        
+          });
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+        
       }
 
 

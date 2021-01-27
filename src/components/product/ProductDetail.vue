@@ -91,7 +91,15 @@ export default {
    
     addToCart(product) {
       // this.ADD_CART_LOCAL(product);
-        this.$store.commit('productAddToCard', product)
+        this.$store.commit('productAddToCard', product);
+        this.$swal({  
+        
+        type: "success",  
+        icon: "success",
+        title: "Success",  
+        text: "Item Added Succesfully", 
+        
+      }); 
     }
   },
   created() {

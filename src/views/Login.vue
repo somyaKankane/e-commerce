@@ -130,7 +130,6 @@ export default {
     },
     methods: {
         login() {
-            // alert("Asdsad");
         this.showLoader = true;
 
             this.errors = [];
@@ -166,7 +165,7 @@ export default {
             //   // date: doc.data().date,
             // });
             console.log(doc.data());
-            localStorage.setItem('role',doc.data().role);
+            localStorage.setItem('role',doc.data().userRole);
             if(doc.data().role == "admin"){
                this.$router.replace({ name: "admin" });
             }

@@ -139,7 +139,7 @@ export default {
   },
   methods:{
       closeMenu(){
-        //   alert("dsfsd");
+       
         $(".page-wrapper").toggleClass("toggled");
       },
       logout(){

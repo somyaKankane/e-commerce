@@ -24,7 +24,7 @@
                         </div>
                         <div class="carousel-item">
                           <!-- <img class="d-block w-100" src="..." alt="Third slide"> -->
-                          <img alt="Vue logo" class="d-block w-100" src="../../assets/31953.jpg" :style="{height:'400px',    'margin-bottom': '50px'}"  >
+                          <img alt="Vue logo" class="d-block w-100" src="../../assets/4172581.jpg" :style="{height:'400px',    'margin-bottom': '50px'}"  >
                         </div>
                       </div>
                       <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

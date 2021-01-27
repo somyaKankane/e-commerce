@@ -48,7 +48,7 @@ export default {
       if (this.visible) {
         this.Accordion.active = null;
       } else {
-        //  alert(this.index);
+
         this.Accordion.active = this.index;
       }
     },
