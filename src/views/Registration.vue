@@ -1,7 +1,8 @@
 <template>
-  <div class="create-account text-center">
+    <div class="wrapper fadeInDown">
+  <div id="formContent">
     <form class="form-signup " @submit.prevent="createAccount">
-      <img class="mb-4" src="../assets/create-account.svg" alt width="72" height="72">
+      <img class="" src="../assets/20945760.png" alt :style="{'width':'70%'}">
       <h1 class="h3 mb-3 font-weight-normal">Create an account</h1>
       <div
         class="alert alert-danger"
@@ -67,6 +68,7 @@
         <i class="fa fa-spinner fa-spin mr-1" v-if="showLoader"></i>Sign Up
       </button>
     </form>
+  </div>
   </div>
 </template>
 <script>

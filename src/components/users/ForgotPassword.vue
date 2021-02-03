@@ -1,11 +1,10 @@
 <template>
-  <div class="login container">
-    <div class="row">
-      <div class="col text-center">
+  <div class="wrapper fadeInDown">
+  <div id="formContent">
         <!-- <createAccount v-if="isSignUp"></createAccount> -->
 
         <form class="form-signin" @submit.prevent="forgetPassword">
-          <img class="mb-4" src="../../assets/forgotpassword.png" alt width="100" height="100">
+          <img class="" src="../../assets/3293465.png" alt :style="{'width':'120%'}">
           <h1 class="h3 mb-3 font-weight-normal">Forgot Password</h1>
 
           <div v-if="error" class="alert alert-danger">{{error}}</div>
@@ -28,7 +27,7 @@
 
       </div>
     </div>
-  </div>
+
 </template>
 <script>
 import firebase from "firebase";

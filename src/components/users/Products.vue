@@ -34,8 +34,10 @@
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Price</th>
                       <th>Description</th>
+                      <th>Buy Price</th>
+                      <th>Discount</th>
+                      <th>Sale Price</th>
                       <th>Tags</th>
                       <th>Modify</th>
                     </tr>
@@ -47,12 +49,20 @@
                           {{product.name}}
                         </td>
 
+                         <td>
+                          {{product.description}}
+                        </td>
+
                         <td>
-                          {{product.price}}
+                          ₹{{product.price}}
                         </td>
 
                          <td>
-                          {{product.description}}
+                          {{product.discount}}%
+                        </td>
+
+                        <td>
+                          ₹{{Math.round(product.price-(product.price*product.discount/100))}}
                         </td>
 
                          <td>
@@ -61,8 +71,8 @@
 
                         <td>
 
-                          <button class="btn btn-primary" @click="editProduct(product)">Edit</button>
-                          <button class="btn btn-danger" @click="deleteProduct(product)">Delete</button>
+                          <button class="btn btn-primary" @click="editProduct(product)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                          <button class="btn btn-danger" @click="deleteProduct(product)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </td>
 
                       </tr>
@@ -106,6 +116,11 @@
 
                     <div class="form-group">
                       <input type="text" placeholder="Product price" v-model="product.price" class="form-control">
+                    </div>
+
+                     <div class="form-group">
+                      <label for="product_image">Discount(%)</label>
+                     <input type="text" placeholder="Product Discount" v-model="product.discount" class="form-control">
                     </div>
 
                     <div class="form-group">
@@ -241,6 +256,7 @@ export default {
           name:null,
           description:null,
           price:null,
+          discount:null,
           tags:[],
           images:[]
         },
@@ -380,6 +396,7 @@ export default {
               name: doc.data().name,
               description:doc.data().description,
               price:doc.data().price,
+              discount:doc.data().discount,
               tags:doc.data().tags,
               images:doc.data().images
               // date: doc.data().date,

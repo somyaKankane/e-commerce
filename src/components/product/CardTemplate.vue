@@ -26,8 +26,9 @@
         <hr>
         <!-- <p class="card-text">{{item.description}}.</p> -->
          <div class="product-price">
-        <span>₹ {{ item.price }}, 00</span>
-        <span>10 x {{ Math.round(item.price / 10) }}, 00 </span>
+        <!-- <span>₹ {{ item.price }}</span> -->
+        <span><strong>₹{{Math.round(item.price-(item.price*item.discount/100))}}</strong></span>
+        <span v-if="item.discount !=0" ><del class="text-muted">₹ {{item.price }}</del>&nbsp;<strong  class="off">{{item.discount}}% OFF</strong> </span>
       </div>
       </div>
       
@@ -80,7 +81,9 @@ export default {
   methods: {
     navigateProductDetail(product) {
       console.log(product.id);
+        this.$store.commit('productAddRecent', product)
       this.$router.push({name:'productDetails',params: { id:  product.id}})  ;
+      
 
     },
 
@@ -309,6 +312,10 @@ export default {
    
     height: 10%;
     
+  }
+  .off{
+    color: #ff0000e3;
+    font-size: 1rem;
   }
   
 </style>

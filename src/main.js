@@ -23,7 +23,7 @@ import Checkout from './components/users/Checkout.vue';
 import ProductDetail from './components/product/ProductDetail.vue';
 import VueSweetalert2 from 'vue-sweetalert2';  
 import Wishlist from '../src/views/Wishlist.vue';
-
+ import Productview from '../src/views/Productview.vue'
 import Vuex from 'vuex';
 
 require("firebase/firestore");
@@ -51,17 +51,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {path: '/', redirect: '/home'},
-    { path: '/admin',name:'admin', component: Admin, meta: { requiresAuth: true },
+    { path: '/admin',name:'admin',redirect: '/admin/products', component: Admin, meta: { requiresAuth: true },
     children:[
+      
+      {path: '/:notFound(.*)', redirect: '/coupon'},
       {
-        path: '/',
-        name:'products',
-        component: Product
-      },
-      {path: '/:notFound(.*)', redirect: '/overview'},
-      {
-        path: 'overview',
-        name: 'overview',
+        path: 'coupon',
+        name: 'coupon',
         component: Overview
       },
       {
@@ -102,6 +98,11 @@ const router = createRouter({
       path: "/myorder",
       name: "myorder",
       component: Orders
+    },
+    {
+      path: "/product",
+      name: "product",
+      component: Productview
     },
     {
       path: "/wishlist",

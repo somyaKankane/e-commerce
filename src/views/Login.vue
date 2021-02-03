@@ -1,57 +1,4 @@
 <template>
-  <!-- <div class="login container">
-    <div class="row">
-      <div class="col text-center">
-
-        <form class="form-signin" @submit.prevent="login">
-          
-          <img class="mb-4" src="../../assets/login-img.png" alt width="72" height="72">
-          <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-          <div v-if="errors.length">
-                <p v-for="error in errors" :key="error"  class="alert alert-danger"
-        role="alert" >
-                    {{ error }}
-                </p>
-          </div>
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-          <label for="email" class="sr-only">Email address</label>
-          <input
-            type="email"
-            id="email"
-            class="form-control"
-            v-model="email"
-            placeholder="Email address"
-            required
-            autocomplete="email"
-          >
-          <label for="password" class="sr-only">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="password"
-            class="form-control"
-            placeholder="Password"
-            required
-            autocomplete="current-password"
-          >
-
-          <router-link class="nav-link" to="/forgotpassword">Forget password ?</router-link>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">
-            <i class="fa fa-spinner fa-spin mr-1" v-if="showLoader"></i> Log In
-          </button>
-        </form>
-        <p class="mt-3 text-muted">
-          <span v-if="isSignUp">
-            Already a member?
-            
-          </span>
-          <span v-if="!isSignUp">
-            New?<router-link class="nav-link" to="/registration">Create an Account</router-link>
-          </span>
-        </p>
-      </div>
-    </div>
-  </div> -->
   <div class="wrapper fadeInDown">
   <div id="formContent">
     <!-- Tabs Titles -->
@@ -61,7 +8,7 @@
     <!-- Login Form -->
     <form class="form-signin" @submit.prevent="login">
           
-          <img class="mb-4" src="../assets/login-img.png" alt width="72" height="72">
+          <img class="" src="../assets/Studio_Project.png" alt :style="{'width':'90%'}">
           <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
           <div v-if="errors.length">
                 <p v-for="error in errors" :key="error"  class="alert alert-danger"
@@ -100,6 +47,11 @@
     <!-- Remind Passowrd -->
     <div id="formFooter">
      <!-- <p class="mt-3 text-muted"> -->
+       <div>
+       
+       
+        
+    </div>
           <span v-if="isSignUp">
             Already a member?
             
@@ -107,6 +59,11 @@
           <span v-if="!isSignUp">
             New?<router-link class="nav-link" to="/registration">Create an Account</router-link>
           </span>
+          <div>
+            <a @click.prevent="share(facebook)" class="fa fa-facebook faDes"></a>
+            <a @click.prevent="share(twitter)" class="fa fa-twitter faDes"></a>
+            <a @click.prevent="share(linkedin)" class="fa fa-linkedin faDes"></a>
+          </div>
         <!-- </p> -->
     </div>
 
@@ -117,6 +74,19 @@
 import firebase from "firebase";
 import { db } from '../main';
 export default {
+   props: {
+            text: {
+                type: String,
+                required: true,
+                default:""
+            },
+            url: {
+                type: String,
+                required: true,
+                 default: 'https://news.vuejs.org'
+            }
+        },
+
     data() {
         return {
         email: "",
@@ -125,10 +95,36 @@ export default {
         isSignUp: false,
         error:'',
         errors: [],
+        // url: window.location.origin+'/home',
+        providers: {
+                    twitter: 'https://twitter.com/intent/tweet/?url=:url&text=:text',
+                    facebook: 'https://www.facebook.com/sharer/sharer.php?u=:u&title=:title',
+                    linkedin:'https://www.linkedin.com/sharing/share-offsite/?url=:u&title=:title'
+                    // =https%3A%2F%2Fnews.vuejs.org%2Fissues%2F180
+                }
+                
         
         };
     },
+    computed: {
+            facebook() {
+             
+                return this.providers.facebook.replace(':u',this.url).replace(':title', this.text);
+            },
+            twitter() {
+                return this.providers.twitter.replace(':url',this.url).replace(':text', this.text);
+            },
+            linkedin() {
+             
+                return this.providers.linkedin.replace(':u', 'https://news.vuejs.org',).replace(':title', this.text);
+            },
+        },
     methods: {
+       share(url) {
+                window.open(url, 'sharer', 'toolbar=0,status=0,width=648,height=395');
+
+                return true;
+            },
         login() {
         this.showLoader = true;
 
@@ -155,15 +151,6 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            // this.products.push({
-            //   id: doc.id,
-            //   name: doc.data().name,
-            //   description:doc.data().description,
-            //   price:doc.data().price,
-            //   tags:doc.data().tags,
-            //   images:doc.data().images
-            //   // date: doc.data().date,
-            // });
             console.log(doc.data());
             localStorage.setItem('role',doc.data().userRole);
             if(doc.data().role == "admin"){
@@ -227,7 +214,7 @@ export default {
   justify-content: center;
   width: 100%;
   min-height: 100%;
-  padding: 80px 20px 15px 20px;
+  padding: 15px 20px 15px 20px;
 }
 
 #formContent {
@@ -449,6 +436,35 @@ input[type=text]:placeholder {
 #icon {
   width:60%;
 }
+
+.faDes {
+  padding: 5px;
+  font-size: 30px;
+  width: 25px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+  border-radius: 50px;
+
+}
+
+.faDes:hover {
+    opacity: 0.7;
+}
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
 
 
 

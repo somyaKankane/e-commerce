@@ -53,9 +53,9 @@
                         </li>
 
                         <li>
-                            <router-link to="/admin/overview">
-                                <i class="fa fa-line-chart"></i>
-                                <span>Overview</span>
+                            <router-link to="/admin/coupon">
+                                <i class="fa fa-tags"></i>
+                                <span>Coupon</span>
                             </router-link>
                         </li>
                         <li>
@@ -70,6 +70,13 @@
                                 <span>Orders</span>
                             </router-link>
                         </li>
+
+                        <!-- <li>
+                            <router-link to="/admin/coupon">
+                                <i class="fa fa-tags"></i>
+                                <span>Coupon</span>
+                            </router-link>
+                        </li> -->
 
                         <li>
                             <router-link to="/admin/profile">

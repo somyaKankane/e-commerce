@@ -19,10 +19,12 @@ const store = createStore({
     orderTotal: null,
     Shipping:null,
     cardData:[],
+    recentView:[],
     allCategory:[],
     singleProduct:[],
     allOrder:[],
     wishlist:[],
+    allCoupon:[],
   
     cart: cart ? JSON.parse(cart) : [],
     profile: {
@@ -110,10 +112,10 @@ const store = createStore({
         console.log(value);
         console.log(index);
         if(value.quantity != 1){
-          total = total+(parseInt(value.price) * parseInt(value.quantity) );
+          total = total+(parseInt(value.price-((value.price*value.discount)/100)) * parseInt(value.quantity) );
         }
         else{
-          total = total+parseInt(value.price);
+          total = total+parseInt(Math.round(value.price-((value.price*value.discount)/100)));
         }
        
         state.totalCalculatePrice=total;
@@ -185,6 +187,24 @@ const store = createStore({
       window.localStorage.setItem('cart', JSON.stringify(state.cardData));
    
     },
+    productAddRecent(state,product){
+     
+      let found = state.recentView.find(data => data.id == product.id );
+
+      if(found){
+        console.log("aa");
+      }else{
+        state.recentView.push(product);
+      }
+
+      this.commit('saveRecentData');
+    },
+    saveRecentData(state){
+      console.log("1",state.recentView);
+      // console.log("1",state.cart);
+      sessionStorage.setItem('recentView', JSON.stringify(state.recentView));
+   
+    },
     saveCardDataToFirebase(state,data){
       const currentUser = firebase.auth().currentUser.uid;
       console.log("hhhhh", localStorage.getItem('cart'),state.cardData);
@@ -239,6 +259,7 @@ const store = createStore({
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
+            console.log( state.singleProduct);
         });
          
       },
@@ -346,6 +367,30 @@ const store = createStore({
             console.log("Error getting document:", error);
         });
         
+      },
+
+      addCoupon(state){
+        state.allCoupon=[];
+        db.collection('coupon').get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            
+
+            state.allCoupon.push({
+              amount:doc.data().amount,
+              description:doc.data().description,
+              discountType:doc.data().discountType,
+              name:doc.data().name,
+              status:doc.data().status,
+              id:doc.id,
+            });
+             
+        
+          });
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
       }
 
 

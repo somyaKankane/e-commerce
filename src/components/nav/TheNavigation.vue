@@ -16,8 +16,12 @@
               
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/product">Product</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/about">About</router-link>
           </li>
+
           <!-- <li class="nav-item">
               
             </li> -->
@@ -30,10 +34,10 @@
             <router-link class="nav-link" to="/addproduct">Add Product</router-link>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <!-- <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        </form> -->
         <div class="nav-item">
           <!-- <a class="nav-link pointing" :style="{color:'#28a745'}" @click.prevent="signOut">Sign out</a> -->
           <!-- <i class="fa fa-line-chart"></i> -->
@@ -142,7 +146,16 @@ export default {
     },
      addToCart(){
       // this.$store.commit('saveCardDataToFirebase');
-         this.checkout();
+      var user = firebase.auth().currentUser;
+
+        if (user ==null) {
+          // User is signed in.
+          this.$router.push({name:'login'})  ;
+        } else {
+          // No user is signed in.
+          this.checkout();
+        }
+         
       
      
 

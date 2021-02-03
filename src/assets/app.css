@@ -3,7 +3,7 @@
 .container{
     position: relative;
     top: 30px;
-    /* margin-bottom: 15%; */
+    margin-bottom: 3rem;
 }
 .jumbotron {
     padding: 1rem 0rem;

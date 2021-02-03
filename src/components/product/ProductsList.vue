@@ -3,7 +3,7 @@
            <div class="row">
                 <div class="col-md-4" 
                 v-for="(item, index) in products_list" 
-                :key="index">
+                :key="index" >
                    <card-template :item="item" />
                 </div>
            </div>

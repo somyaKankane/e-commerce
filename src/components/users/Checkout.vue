@@ -223,21 +223,18 @@
                             <div>
                             <!-- <p class="mt-0">Quantity : </p>  -->
                             <label for="quantity">Qty: </label>
-                             <button type="button" :class="index" class="minus" @click="increase(item)">+</button>
+                             &nbsp;<button type="button" :class="index" class="minus" @click="increase(item)">+</button>
                             {{item.quantity}}
                             <button type="button"  :class="index" class="plus" @click="decrease(item)">-</button>
-        <!-- <button type="submit">Add to cart</button> -->
-                                <!-- <input min="1" type="number" class="form-control w-20"  id="quantity" name="quantity" value="1" /> -->
-                              <!-- <div class="quantity-toggle">
-                                <button @click="decrement()">&mdash;</button>
-                                <input type="text" :value="quantity" readonly />
-                                <button @click="increment()">&#xff0b;</button>
-                              </div> -->
+
                             </div>
                             
-                            <p class="mt-0 float-right"><strong>₹{{item.price * item.quantity}}</strong>&nbsp;<del>₹ {{item.price }}</del></p>
+                            <p class="mt-0 float-right"><strong>₹{{(Math.round(item.price-(item.price*item.discount/100))) * item.quantity}}</strong>
+                              &nbsp;<del class="text-muted">₹ {{item.price }}</del>
+                              &nbsp;<strong v-if="item.discount !=0" class="off">{{item.discount}}% OFF</strong> 
+                            </p>
                             
-                           <!-- {{item.price * item.quantity}} -->
+                          
                         </div>
                         </li>
 
@@ -249,10 +246,22 @@
                                     <strong>Subtotal</strong>
                                     <div class="pull-right"><strong>₹ {{this.$store.state.totalCalculatePrice  }} </strong></div>
                                 </div>
+
                                 <div class="col-xs-12">
                                     <strong>Shipping</strong>
                                     <div class="pull-right"><strong>₹ {{this.$store.state.Shipping  }} </strong></div>
                                 </div>
+
+                                <div v-if="showcoupanData != true" class="col-xs-12">
+                                    <strong>Coupon Discount</strong>
+                                    <div class="pull-right"><button type="button"  @click="applyCoupon()" :style="{'padding': '0px', 'color': '#ff0000d4'}" class="btn btn-link">Apply Coupon</button></div>
+                                </div>
+
+                                 <div v-if="showcoupanData == true" class="col-xs-12">
+                                    <strong>Coupon Discount</strong>
+                                    <div class="pull-right"><strong>- ₹ {{this.couponAmount  }} </strong>&nbsp;<button type="button" class="copDes" @click="removeCoupon()">X</button></div>
+                                </div>
+
                             </div>
                             <hr>
                            <div class="form-group">
@@ -262,14 +271,6 @@
                                 </div>
                             </div>
   
-                    <!-- <card class='stripe-card'
-                        :class='{ complete }'
-                        stripe='pk_test_XXXXXXXXXXXXXXXXXXXXXXXX'
-                        :options='stripeOptions'
-                        @change='complete = $event.complete'
-                        />
-
-                        <button class='pay-with-stripe btn btn-primary mt-4' @click='pay' :disabled='!complete'>Pay with credit card</button> -->
                     
                 </div>
             </div>
@@ -288,12 +289,15 @@ import TheNavigation from '../nav/TheNavigation.vue';
 // import store from "../../store";
 import Accordion from "../accordion.vue";
 import AccordionItem from "../accordion-item.vue";
+import { db } from '../../main';
 
 export default {
     data () {
     return {
       proactive: [],
+      couponAmount:null,
       complete: false,
+      showcoupanData:false,
        errors: [],
         quantity: 1,
        cardMasks: cardMasks,
@@ -383,12 +387,13 @@ export default {
     },
     increase(daata){
       console.log(daata);
+      let toBeAddedPrice=JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id) ;
       if(daata.quantity >=1){
         daata.quantity++;
-        // console.log(typeof(parseInt(daata.price)));
+        console.log(toBeAddedPrice);
        
-       this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice+Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
-       this.$store.state.orderTotal = this.$store.state.orderTotal + Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
+       this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice+Number(Math.round(toBeAddedPrice.price-(toBeAddedPrice.price*toBeAddedPrice.discount/100)));
+       this.$store.state.orderTotal = this.$store.state.orderTotal + Number(Math.round(toBeAddedPrice.price-(toBeAddedPrice.price*toBeAddedPrice.discount/100)));
 
         // daata.price = ( Number(daata.price) + Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price ));
       }else{
@@ -407,8 +412,9 @@ export default {
       // daata.quantity--;
        if(daata.quantity>1){
         daata.quantity--;
-        this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
-        this.$store.state.orderTotal = this.$store.state.orderTotal - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price );
+        let toBeAddedPrice=JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id) ;
+        this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice - Number(Math.round(toBeAddedPrice.price-(toBeAddedPrice.price*toBeAddedPrice.discount/100)));
+        this.$store.state.orderTotal = this.$store.state.orderTotal - Number(Math.round(toBeAddedPrice.price-(toBeAddedPrice.price*toBeAddedPrice.discount/100)));
         // daata.price = ( Number(daata.price) - Number(JSON.parse(localStorage.getItem('cart')).find(data => data.id === daata.id).price ));
       }else{
         // this.$swal("quantity can't be smaller than 1");  
@@ -421,7 +427,8 @@ export default {
         }
     },
     remove(item){
-      console.log(JSON.parse(localStorage.getItem('cart')).find(data => data.id === item.id) );
+      // console.log(JSON.parse(localStorage.getItem('cart')).find(data => data.id === item.id) );
+      // console.log(this.$store.state.totalCalculatePrice - Math.round(item.price-(item.price*item.discount/100)))
        var myMovie=JSON.parse(localStorage.getItem('cart')) ;
        var i=myMovie.findIndex(movie=>movie.id===item.id);
         if(i!==-1){
@@ -430,10 +437,63 @@ export default {
         }
         localStorage.setItem('cart', JSON.stringify(myMovie))
          this.proactive = JSON.parse(localStorage.getItem('cart'));
-         this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice - Number(item.price );
-        this.$store.state.orderTotal = this.$store.state.orderTotal - Number(item.price );
+         this.$store.state.totalCalculatePrice=this.$store.state.totalCalculatePrice - Math.round(item.price-(item.price*item.discount/100));
+        this.$store.state.orderTotal = this.$store.state.orderTotal - Math.round(item.price-(item.price*item.discount/100));
        
         // console.log(myMovie);
+    },
+    applyCoupon(){
+ 
+      this.$swal({
+        title: 'Enter Coupon Code',  
+        input: 'text', 
+        inputPlaceholder: 'Enter Coupon Code Here',   
+        inputAttributes: {
+        autocapitalize: 'off'
+      },
+        showCancelButton: true,
+        confirmButtonText: 'Check',
+        showLoaderOnConfirm: true,
+          preConfirm: (login) => {
+            return db.collection("coupon").where("name", "==", login)
+                .get()
+                .then((querySnapshot) => {
+                    console.log("das",querySnapshot.docs.length);
+                    if(querySnapshot.docs.length !=0){
+                      querySnapshot.forEach((doc1) => {
+                      this.showcoupanData=true;
+                      this.couponAmount=doc1.data().amount;
+                      this.$store.state.orderTotal=this.$store.state.orderTotal- doc1.data().amount;
+                      return console.log(doc1.data());
+                        
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                    }
+                    else{
+                      this.$swal('Invalid Coupon!');  
+                    }
+                    
+                  
+                }).catch((error) => {
+                  console.log(error);
+                })
+          },
+          allowOutsideClick: () => !this.$swal.isLoading()
+          }).then((result) => {
+            console.log(result);
+            if (result.isConfirmed) {
+                //  alert(result);
+              this.$swal('Coupon Applied!');  
+            }
+          })
+    },
+
+    removeCoupon(){
+     
+      this.showcoupanData=false;
+      this.$store.state.orderTotal=this.$store.state.orderTotal+Number(this.couponAmount);
+      this.couponAmount=null;
     }
  
   
@@ -606,5 +666,20 @@ export default {
     color: #fff;
     cursor: pointer;
     float: right;
+  }
+   .off{
+    color: #ff0000e3;
+    font-size: 1rem;
+  }
+  .copDes{
+    
+    border-radius: 50%;
+    border: 0;
+    background-color: transparent;
+    color: red;
+    cursor: pointer;
+    float: right;
+    
+
   }
 </style>
