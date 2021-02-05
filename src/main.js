@@ -120,29 +120,29 @@ const router = createRouter({
   }
 });
 window.Vuex = Vuex;
-// router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
 
-//   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
-//   const currentUser = firebase.auth().currentUser
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
+  const currentUser = firebase.auth().currentUser
 
-//   if (requiresAuth && !currentUser) {
-//       next('/')
-//   } else if (requiresAuth && currentUser) {
-//       next()
-//   } else {
-//       next()
-//   }
-// })
+  if (requiresAuth && !currentUser) {
+      next('/')
+  } else if (requiresAuth && currentUser) {
+      next()
+  } else {
+      next()
+  }
+})
 
-// let apps = '';
-// firebase.auth().onAuthStateChanged(function(user) {
-//   console.log("1");
-//   if(!apps){
-//   console.log("user");
-//   console.log(user);
-//   }
+let apps = '';
+firebase.auth().onAuthStateChanged(function(user) {
+  console.log("1");
+  if(!apps){
+  console.log("user");
+  console.log(user);
+  }
 
-// });
+});
 
 const app = createApp(App);
 

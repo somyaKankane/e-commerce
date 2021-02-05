@@ -19,7 +19,7 @@
           </div>
           <div v-if="proactive.length == 0" class="checkout-message">
             <h3>No products...</h3>
-            <router-link to="./home">Back to list of products</router-link>
+            <router-link to="./product">Back to list of products</router-link>
           </div>
             <div  v-else class="row">
 

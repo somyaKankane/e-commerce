@@ -3,7 +3,7 @@
   <div class="hello">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <!-- <img alt="Vue logo" src="../assets/cardLogo2.png" width="50px"> -->
-      <img alt="Vue logo" src="../../assets/cardLogo2.png" :style="{width:'50px'}">
+      <img alt="Vue logo" src="../../assets/O4WJ6Z0.png" :style="{width:'50px'}">
       <a class="navbar-brand" href="#">Shop</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,7 +11,7 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
               <router-link class="nav-link" to="/home">Home</router-link>
               
           </li>
@@ -64,7 +64,7 @@
                 <i class="fa fa-heart" ></i>
                 &nbsp;<span>Wishlist</span>
               </a>
-              <a class="dropdown-item" @click="logout()">
+              <a v-if="user != null"  class="dropdown-item" @click="logout()">
                 <i class="fa fa-power-off"></i>
                 &nbsp;<span>Logout</span>
               </a>
@@ -107,6 +107,7 @@ import { db } from '../../main';
 export default {
   name: 'NavBar',
   uid:'',
+  user:'',
   props: {
     msg: String,
      name: String,
@@ -146,9 +147,9 @@ export default {
     },
      addToCart(){
       // this.$store.commit('saveCardDataToFirebase');
-      var user = firebase.auth().currentUser;
+      this.user = firebase.auth().currentUser;
 
-        if (user ==null) {
+        if (this.user ==null) {
           // User is signed in.
           this.$router.push({name:'login'})  ;
         } else {
@@ -203,6 +204,7 @@ export default {
     this.$router.replace({name: "wishlist"});
   },
    logout(){
+      sessionStorage.removeItem('recentView');
          firebase
         .auth()
         .signOut()
@@ -220,6 +222,9 @@ export default {
     
   },
   mounted() {
+     this.user = firebase.auth().currentUser;
+    // alert(this.user);
+    
     // console.log( JSON.parse(localStorage.getItem('cart')) );
     // // this.catchData();
     // var data=JSON.parse(localStorage.getItem('cart') );

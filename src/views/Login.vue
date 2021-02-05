@@ -234,7 +234,7 @@ export default {
 #formFooter {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
-  padding: 15px;
+  padding: 12px;
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;

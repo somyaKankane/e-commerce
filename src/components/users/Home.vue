@@ -320,6 +320,10 @@ data(){
         margin-top: 2rem;
         background: #f2f2f2;
         /* margin-bottom: 2rem; */
+
+    margin-left: 20px;
+    margin-right: 20px;
+
   }
   .productFilter{
   padding: 25px 15px ;
